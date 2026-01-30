@@ -78,7 +78,8 @@ Trace normalization (from paper + observed in JSONs):
 
 Each JSON includes `ranges` with **two lists of 1-based frame indices**, used by
 the original analysis as pre/post windows. In this repo, loaders expose this as
-`ranges_raw`.
+`ranges_raw`. The current stationarity pipeline uses a **half‑split** instead of
+`ranges_raw`, but the ranges are still relevant for heat‑pulse analyses.
 
 Observed in this repo:
 - Baseline: `ranges` is consistently **[1..800]** and **[801..1600]**.

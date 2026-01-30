@@ -1,2 +1,2 @@
-uid,n_neurons,T,dt_sec,unique_loops,loop_switches,segments,validation_score_mean,validation_score_std,phase_frac_small,phase_var,cycles_per_min,median_d,mean_segment_len
-kato_shared,22,15662,0.344,3,96,97,10.4597396956534,0.814736352142058,0.99515111258718,0.110958883015052,0.201059648378691,14.9669488012778,194.012820512821
+uid,n_neurons,T,dt_sec,unique_loops,loop_switches,segments,validation_score_mean,validation_score_std,recon_corr_full,phase_frac_small,phase_var,phase_speed_bins_per_min,median_d,mean_segment_len
+kato_shared,22,15662,0.344277972585246,2,87,88,9.4444499782811,0.860878231027034,0.661343976366673,0.99336165693043,0.133099311798209,12.0088443007071,14.672392229041,174.149425287356

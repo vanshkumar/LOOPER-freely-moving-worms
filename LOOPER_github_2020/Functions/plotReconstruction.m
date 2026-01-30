@@ -88,9 +88,9 @@ validIDs = ~isnan(allIDs);
 testStream = processedStream(:,validIDs);
 testReconstruction = reconstructedStream(:,validIDs);
 
-Rsquared = corr(testStream(:), testReconstruction(:));
+Rcorr = corr(testStream(:), testReconstruction(:));
 
-sgtitle(['Reconstruction R^2 = ' num2str(Rsquared)]);
+sgtitle(['Reconstruction corr = ' num2str(Rcorr)]);
 
 
 clear 'reconstructionPlotIndices';

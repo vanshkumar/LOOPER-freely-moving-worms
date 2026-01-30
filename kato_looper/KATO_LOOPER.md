@@ -9,50 +9,75 @@ This is intentionally **standalone** for the `kato_looper/` subfolder.
 
 ## What the scripts do
 
-### 1) Single‑worm run + eval (implemented)
-- **Run:** `kato_looper_single_run.m`
+### 1) Single‑worm runs (implemented)
+#### Fidelity (full‑trace reconstruction)
+- **Run + eval:** `kato_single_fidelity.m`
   - Loads the first Kato worm via `load_kato_data`.
   - Applies per‑neuron detrend across time (pending OSF clarification).
-  - Runs LOOPER with paper‑style C. elegans parameters.
-  - Saves to `results/kato_single/kato_single.mat` plus the final PCA figure.
+  - Trains on the **full trace** (paper‑style fidelity).
+  - **Goal:** check whether LOOPER can *faithfully reconstruct* an immobilized worm’s
+    continuous dynamics (closest to Fig‑5B style fidelity).
+  - Saves to `results/kato_single/fidelity/kato_single_fidelity.mat` and writes
+    `results/kato_single/fidelity/summary.csv` + diagnostics.
+  - Implementation: calls `looper_run_core.m` + `looper_eval_core.m`.
 
-- **Eval:** `kato_looper_single_eval.m`
-  - Loads the saved `.mat` and runs `run_looper_diagnostics`.
-  - Saves diagnostics plots under `results/kato_single/diagnostics/`.
-  - Writes `results/kato_single/summary.csv`.
+#### Stationarity (split‑half)
+- **Run + eval:** `kato_single_stationarity.m`
+  - Loads the first Kato worm via `load_kato_data`.
+  - Applies per‑neuron detrend across time (pending OSF clarification).
+  - Trains on the **first half** and evaluates on the full trace (stricter stationarity test).
+  - **Goal:** test whether a scaffold learned early remains valid later in the same recording.
+  - Saves to `results/kato_single/stationarity/kato_single_stationarity.mat` and writes
+    `results/kato_single/stationarity/summary.csv` + diagnostics.
+  - Computes a **held‑out post‑half reconstruction correlation** (`recon_corr_post`) as
+    a stricter positive control (closer to the paper’s held‑out validation setup, though
+    not an exact Fig‑5B reproduction).
+  - Implementation: calls `looper_run_core.m` + `looper_eval_core.m`.
 
-### 2) All‑worms run + eval
+### 2) All‑worms runs
 Goal: run LOOPER independently on all 5 worms and evaluate each result.
 
-- `kato_looper_all_run.m`
+#### Fidelity (full‑trace reconstruction)
+- **Run + eval:** `kato_all_fidelity.m`
   - Loop over all worms from `load_kato_data`.
-  - Save one result per worm:
-    - `results/kato_all/worm_1.mat` … `worm_5.mat`
-  - Save a manifest with params + worm IDs.
+  - Train on the **full trace** for each worm (paper‑style fidelity).
+  - **Goal:** check reproducibility of reconstruction fidelity across worms.
+  - Save one result per worm (`results/kato_all/fidelity/worm_*.mat`) and a manifest.
+  - Writes `results/kato_all/fidelity/summary.csv` + diagnostics.
+  - Implementation: calls `looper_run_core.m` + `looper_eval_core.m`.
 
-- `kato_looper_all_eval.m`
-  - Iterate over `results/kato_all/*.mat`.
-  - Run diagnostics and save plots to per‑worm subfolders.
-  - Writes `results/kato_all/summary.csv`.
+#### Stationarity (split‑half)
+- **Run + eval:** `kato_all_stationarity.m`
+  - Loop over all worms from `load_kato_data`.
+  - Train on the **first half** for each worm (stationarity test).
+  - **Goal:** check scaffold stability across time for each worm.
+  - Save one result per worm (`results/kato_all/stationarity/worm_*.mat`) and a manifest.
+  - Writes `results/kato_all/stationarity/summary.csv` + diagnostics.
+  - Implementation: calls `looper_run_core.m` + `looper_eval_core.m`.
 
 ### 3) Shared‑neuron, concatenated run + eval
 Goal: reproduce the **paper‑style** worm analysis that appears to concatenate
 traces across all 5 worms **using a shared neuron set** (per OSF script).
+This is a **fidelity‑only** run; stationarity is not well‑defined once worms
+are concatenated.
 
-- `kato_looper_shared_run.m`
+- `kato_shared_run.m`
   - Compute shared neuron IDs across worms.
   - Subset each worm to the shared set:
-    - default: intersection of identified labels (IDs containing letters)
-    - note: paper curated 15‑neuron list is **not used** here because VB01 is
-      missing in worm 5 of `KATO_WT_NoStim.mat`.
+    - intersection of identified labels (IDs containing letters)
+    - note: the paper’s curated 15‑neuron list is **not used** because worm 5
+      lacks **VB01** in `NeuronNames` (confirmed in `KATO_WT_NoStim.mat`).
   - Detrend + z‑score per neuron.
   - Concatenate across worms and run LOOPER once.
   - Save mapping: worm offsets/lengths + shared IDs.
+  - **Goal:** approximate the OSF/paper analysis that pools worms into a single
+    long continuous trace.
 
-- `kato_looper_shared_eval.m`
+- `kato_shared_eval.m`
   - Run diagnostics on the concatenated model.
   - Writes `results/kato_shared/summary.csv`.
   - (Optional) split reconstructions back by worm using saved offsets.
+  - **Goal:** assess the pooled‑worm scaffold and compare to `wormlooper2.mat`.
 
 ---
 
@@ -71,16 +96,23 @@ This folder mirrors that structure:
 - **all‑worms** runs for per‑worm comparison,
 - **shared‑neuron concatenation** to align most closely with the paper.
 
+Inference note: the Fig‑5 caption references trial boundaries (vertical lines), but the
+C. elegans panel shows none; combined with the lack of worm‑specific validation code
+in OSF, we treat **shared‑neuron concatenation + full‑trace reconstruction** as the
+closest match to Fig‑5B’s reconstruction metric.
+
 From the OSF checkpoint `wormlooper2.mat` (shared‑worm run):
 - shared neuron set size appears to be **18** (RawData = 18 × 15662),
 - 5 worm boundaries are encoded in `TrialSwitches`,
 - `MinimumReturnTime` is **50** (larger than the paper’s default 10).
 
 Current Kato scripts:
-- **Single‑worm** runs (`kato_looper_single_run.m`, `kato_looper_all_run.m`) use
+- **Single‑worm** runs (`kato_single_fidelity.m`, `kato_single_stationarity.m`) use
   `MinimumReturnTime = 10` (paper/default).
-- **Shared‑worm** run (`kato_looper_shared_run.m`) uses `MinimumReturnTime = 50`
-  to match the OSF checkpoint.
+- **All‑worm** runs (`kato_all_fidelity.m`, `kato_all_stationarity.m`) use
+  `MinimumReturnTime = 10` (paper/default).
+- **Shared‑worm** run (`kato_shared_run.m`) overrides `MinimumReturnTime = 50`
+  (vs paper default 10) to match the OSF checkpoint behavior.
 - **Shared‑worm** run sets `MaxCheckTime = 1` to avoid `N x N x MaxCheckTime`
   allocations in `reduceMatrix` for long concatenated traces.
 - All Kato scripts set `PutativeLoopCounts = [8 7 6 5 4 3 2]` to match

@@ -70,6 +70,8 @@ The paper reports **R² = 0.79 (3 PCs)** for the C. elegans panel in Fig 5. In L
 
 There is **no worm‑specific Fig 5 plotting script** in the OSF folder. However, `buildWormData.m` concatenates **all worm traces** (after detrend + shared‑neuron selection + z‑score) into a single long matrix before computing PCA. This strongly suggests that the LOOPER model used for Fig 5B likely operated on a **concatenated multi‑worm continuous trace** rather than a single worm.
 
+**Inference (based on OSF + paper):** no worm‑specific validation split is described in the paper or OSF scripts. The Fig‑5 caption references trial boundaries (vertical lines), but the C. elegans panel has none, so the most plausible interpretation is that **Fig 5B reports full‑trace reconstruction correlation on the concatenated shared‑neuron worm dataset**, not a held‑out validation split.
+
 ---
 
 ## Practical takeaways for this repo

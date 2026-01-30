@@ -3,7 +3,7 @@ function diag = run_looper_diagnostics(saveData, opts)
 %
 % Usage:
 %   diag = run_looper_diagnostics(saveData);
-%   diag = run_looper_diagnostics('results/experiment1_single/xxxx.mat');
+%   diag = run_looper_diagnostics('results/atanas_single_stationarity/xxxx.mat');
 %   diag = run_looper_diagnostics(saveData, struct('preIdxRaw', preIdx, 'postIdxRaw', postIdx, 'tOnRaw', t_on));
 %
 % Options (opts fields, all optional):
@@ -105,15 +105,15 @@ function diag = run_looper_diagnostics(saveData, opts)
         end
     end
 
-    % --- Reconstruction R^2 ---
+    % --- Reconstruction correlation ---
     clear reconstructionPlotIndices;
     plotReconstruction;
     if opts.cloneFigs
         figHandle = findobj('Type', 'figure', 'Number', 1001);
         clone_fig_(figHandle, sprintf('%s_reconstruction', opts.tag), opts.closeOriginalFigs);
     end
-    if exist('Rsquared', 'var')
-        diag.R2_full = Rsquared;
+    if exist('Rcorr', 'var')
+        diag.recon_corr_full = Rcorr;
     end
     if opts.saveFigs
         saveas(gcf, fullfile(opts.outDir, sprintf('%s_reconstruction_full.png', opts.tag)));
@@ -171,7 +171,7 @@ function diag = run_looper_diagnostics(saveData, opts)
             && isfield(opts, 'preIdxRaw') && ~isempty(opts.preIdxRaw)
         try
             rawTrain = saveData.RawData(:, opts.preIdxRaw);
-            [alphaTrain, thetaTrain] = experiment1_helpers.project_to_model(rawTrain, saveData);
+            [alphaTrain, thetaTrain] = looper_helpers.project_to_model(rawTrain, saveData);
             alphaLooper = saveData.BestStateMap(:,1);
             thetaLooper = saveData.BestStateMap(:,2);
             L = min(numel(alphaTrain), numel(alphaLooper));
@@ -235,10 +235,10 @@ function diag = run_looper_diagnostics(saveData, opts)
         if isfield(opts, 'dt_sec') && ~isempty(opts.dt_sec)
             dt = opts.dt_sec;
         end
-        diag.phase_metrics = phase_metrics_(alpha, theta, d, nBins, dt);
+        diag.phase_metrics = looper_helpers.phase_continuity_metrics(alpha, theta, d, nBins, dt);
     else
         diag.phase_metrics = struct('frac_small', nan, 'dtheta_var', nan, ...
-            'cycles_per_min', nan, 'median_d', nan, ...
+            'phase_speed_bins_per_min', nan, 'median_d', nan, ...
             'segments', 0, 'mean_segment_len', nan, 'nBins', nan);
     end
 
@@ -270,70 +270,4 @@ end
 function idx = ismember_rows_(A, B)
     % Returns row indices of A in B (0 if not found).
     [~, idx] = ismember(A, B, 'rows');
-end
-
-function metrics = phase_metrics_(alpha, theta, d, nBins, dt)
-    if nargin < 5 || isempty(dt)
-        dt = nan;
-    end
-    alpha = alpha(:);
-    theta = theta(:);
-    d = d(:);
-
-    changeIdx = find(diff(alpha) ~= 0);
-    edges = [1; changeIdx + 1; numel(alpha) + 1];
-
-    dthetaAll = [];
-    dAll = [];
-    totalCycles = 0;
-    totalTimeSec = 0;
-    segLens = [];
-
-    for i = 1:numel(edges)-1
-        segStart = edges(i);
-        segEnd = edges(i+1) - 1;
-        segLen = segEnd - segStart + 1;
-        if segLen < 2
-            continue;
-        end
-        segLens(end+1,1) = segLen; %#ok<AGROW>
-        thetaSeg = theta(segStart:segEnd);
-        dtheta = wrap_diff_bins_(diff(thetaSeg), nBins);
-        dthetaAll = [dthetaAll; dtheta(:)]; %#ok<AGROW>
-
-        if all(isfinite(thetaSeg))
-            thetaUnwrap = cumsum([thetaSeg(1); dtheta(:)]);
-            cycles = (thetaUnwrap(end) - thetaUnwrap(1)) / nBins;
-            totalCycles = totalCycles + abs(cycles);
-        end
-        totalTimeSec = totalTimeSec + segLen * dt;
-
-        dAll = [dAll; d(segStart:segEnd)]; %#ok<AGROW>
-    end
-
-    metrics = struct;
-    metrics.nBins = nBins;
-    metrics.segments = numel(segLens);
-    if isempty(dthetaAll)
-        metrics.frac_small = nan;
-        metrics.dtheta_var = nan;
-    else
-        metrics.frac_small = mean(abs(dthetaAll) <= 1, 'omitnan');
-        metrics.dtheta_var = var(dthetaAll, 'omitnan');
-    end
-    if ~isfinite(totalTimeSec) || totalTimeSec <= 0
-        metrics.cycles_per_min = nan;
-    else
-        metrics.cycles_per_min = totalCycles / (totalTimeSec / 60);
-    end
-    metrics.median_d = median(dAll, 'omitnan');
-    if isempty(segLens)
-        metrics.mean_segment_len = nan;
-    else
-        metrics.mean_segment_len = mean(segLens);
-    end
-end
-
-function d = wrap_diff_bins_(d, nBins)
-    d = mod(d + nBins/2, nBins) - nBins/2;
 end

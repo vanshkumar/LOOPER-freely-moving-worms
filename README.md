@@ -27,7 +27,7 @@ If anything in docs diverges, **scripts are the source of truth**.
 ## Data
 
 - **Atanas NeuroPAL**: `atanas-data/` (per‑worm JSONs; baseline + heat).
-  - Baseline split uses `ranges_raw` from the paper.
+  - Stationarity split uses a **half‑split** (same as Kato); `ranges_raw` is only relevant for heat‑pulse runs.
 - **Kato 2015**: `kato_2015/` (MAT file; immobilized worms).
 
 Dataset docs:
@@ -39,24 +39,21 @@ Dataset docs:
 ## Main scripts
 
 Baseline (freely moving):
-- Single‑worm: `experiment1_single_baseline_run.m` / `experiment1_single_baseline_eval.m`
-- All‑worms: `experiment1_all_baseline_run.m` / `experiment1_all_baseline_eval.m`
+- Fidelity: `atanas_single_fidelity.m`, `atanas_all_fidelity.m`
+- Stationarity: `atanas_single_stationarity.m`, `atanas_all_stationarity.m`
 
 Kato (positive control):
-- Single‑worm: `kato_looper/kato_looper_single_run.m` / `kato_looper/kato_looper_single_eval.m`
-- All‑worms: `kato_looper/kato_looper_all_run.m` / `kato_looper/kato_looper_all_eval.m`
-- Shared‑neuron concatenation: `kato_looper/kato_looper_shared_run.m` /
-  `kato_looper/kato_looper_shared_eval.m`
-
-Deprecated heat‑pulse path (kept for reference only):
-- `DEPRECATED_experiment1_single_run.m` / `DEPRECATED_experiment1_single_eval.m`
+- Fidelity: `kato_looper/kato_single_fidelity.m`, `kato_looper/kato_all_fidelity.m`
+- Stationarity: `kato_looper/kato_single_stationarity.m`, `kato_looper/kato_all_stationarity.m`
+- Shared‑neuron concatenation: `kato_looper/kato_shared_run.m` /
+  `kato_looper/kato_shared_eval.m`
 
 ---
 
 ## Key outputs
 
-- Atanas baseline summary: `results/experiment1_all_baseline/summary.csv`
-- Atanas single‑worm summary: `results/experiment1_single_baseline/summary.csv`
+- Atanas stationarity summary: `results/atanas_all/stationarity/summary.csv`
+- Atanas single‑worm stationarity summary: `results/atanas_single/stationarity/summary.csv`
 - Kato shared summary: `results/kato_shared/summary.csv`
 
 Diagnostics figures are under each run’s `diagnostics/` folder.

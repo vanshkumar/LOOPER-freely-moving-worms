@@ -10,3 +10,6 @@
 - 2026-01-26: OSF `validateData.m` assumes equal-length trials; `wormlooper2.mat` has variable trial lengths, so `run_looper_diagnostics.m` now skips `validateData` for such cases instead of modifying OSF code.
 - 2026-01-26: Diffusion-map caching in `LOOPER.m` must include `pcaBasis` (set in `buildDiffusionMap`), otherwise `reduceMatrix` errors; missing `pcaBasis` should invalidate the cache and force a full diffusion-map rerun.
 - 2026-01-27: For Experiment 1 detrending with a train/test split, fit the trend on the training window only and apply it to the full trace to avoid leakage.
+- 2026-01-28: `pip install` failed due to no network access in the sandbox; avoid adding Python deps (e.g., SciPy) and use MATLAB or in-repo fallbacks instead.
+- 2026-01-28: `plotReconstruction.m` defines `Rcorr` (not `Rsquared`); diagnostics must read `Rcorr` to capture reconstruction correlation, otherwise `recon_corr_full` stays NaN.
+- 2026-01-28: LOOPER overwrites `saveData`; any custom fields (e.g., `TrainSplit`, `Detrend`) must be reattached **after** calling `LOOPER(...)` or they will be missing in saved `.mat` files and break downstream eval aggregation.

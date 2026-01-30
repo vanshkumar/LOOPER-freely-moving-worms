@@ -1,0 +1,2 @@
+uid,n_neurons,T,dt_sec,unique_loops,loop_switches,segments,validation_score_mean,validation_score_std,recon_corr_full,phase_frac_small,phase_var,phase_speed_bins_per_min,median_d,mean_segment_len,split_idx,mean_pre,mean_post,post_slope,d_peak,recon_corr_post
+2022-06-14-01,109,1600,0.601592789804031,2,30,31,12.3244448673279,0.809368204214367,0.541497617526944,0.959922430510666,0.712903411936974,24.5375315072142,24.3319730732813,60.5,NaN,NaN,NaN,NaN,NaN,NaN

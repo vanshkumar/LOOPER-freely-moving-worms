@@ -23,12 +23,12 @@ Heat-pulse experiments were deprecated after baseline failed to recover stable l
 - Project full trace onto learned scaffold.
 - Evaluate Δd, loop assignment stability, and phase-continuity metrics.
 
-**Aggregate results** (from `results/experiment1_all_baseline/summary.csv`, n=21 worms):
+**Aggregate results** (from `results/atanas_all/stationarity/summary.csv`, n=21 worms):
 
 - median `mean_post` ≈ **31.46**
 - median `post_slope` ≈ **0.06498**
 - median `d_peak` ≈ **72.09**
-- median `cycles_per_min` ≈ **0.49** (max ≈ **0.95**)
+- median `phase_speed_bins_per_min` = **(recompute after eval rerun)**
 - median `unique_loops` = **2**
 - median `loop_switches` = **22**
 - median `median_d` ≈ **36.49**
@@ -38,8 +38,11 @@ Heat-pulse experiments were deprecated after baseline failed to recover stable l
 - Loop ID (`alpha`) is unstable over time (frequent switches).
 - Phase continuity metrics are not strong enough to support stable cyclic dynamics.
 
-**Conclusion**
-Under this evaluation regime, **LOOPER does not recover stable loop-like dynamics in freely moving Atanas baseline worms**.
+**Conclusion (nuanced)**
+Under this **strict split‑half stationarity test**, we do **not** see evidence that a single
+stable scaffold generalizes across the full recording in freely moving Atanas baseline worms.
+This does **not** rule out loop‑like structure on shorter windows or under trial‑style /
+pseudo‑trial validation schemes.
 
 ---
 
@@ -66,7 +69,9 @@ Detrending **did not improve** generalization or loop stability; it worsened dri
 
 ## Kato 2015 (immobilized) — **positive control**
 
-LOOPER successfully recovers stable loops in Kato data, consistent with the LOOPER paper.
+LOOPER recovers **loop‑like structure** in Kato data (high phase continuity, low switching),
+consistent with the paper’s qualitative behavior, even though strict split‑half generalization
+does not hold (see note below).
 
 **Key numbers (shared‑neuron concatenated run):**
 - `summary.csv`: `results/kato_shared/summary.csv`
@@ -75,21 +80,32 @@ LOOPER successfully recovers stable loops in Kato data, consistent with the LOOP
 - `phase_frac_small = 0.995`, `phase_var = 0.111`
 - `median_d = 14.97`
 - `validation_score_mean = 10.46` (std = 0.815)
-- `cycles_per_min = 0.201` (interpret with caution; see note below)
+- `phase_speed_bins_per_min = (recompute after eval rerun)`
 
 **Comparability caveat (important):**
 The paper’s Fig 5B reports **R² reconstruction** (and equivalent #PCs) and validation
 correlations on held‑out trials. Our `summary.csv` is based on LOOPER diagnostics
 correlations in embedded space and phase‑continuity metrics, so it is **not directly
-comparable** to Fig 5B. The cycles/min estimate is especially sensitive to loop switching
+comparable** to Fig 5B. The phase‑speed estimate is especially sensitive to loop switching
 and concatenation across worms, so treat it as **qualitative only**.
+
+**Split‑half nuance (Atanas vs Kato):**
+The split‑half test is a **strong stationarity test**. Kato still shows loop‑like phase behavior
+under this test (high phase continuity), but the learned scaffold does **not** generalize across
+the full trace. Atanas shows **both** poor generalization **and** weaker loop‑like phase
+structure. So Kato remains a stronger positive control even though split‑half generalization
+fails there too.
 
 ---
 
 ## Artifacts / where to look
 
-- Atanas baseline summary: `results/experiment1_all_baseline/summary.csv`
-- Atanas single baseline: `results/experiment1_single_baseline/summary.csv`
+- Atanas stationarity summary: `results/atanas_all/stationarity/summary.csv`
+- Atanas single stationarity: `results/atanas_single/stationarity/summary.csv`
 - Kato summaries (to generate):
-  - `kato_looper_single_eval` → `results/kato_single/summary.csv`
-  - `kato_looper_shared_eval` → `results/kato_shared/summary.csv`
+## Kato single-worm checks
+- **Fidelity (full trace):**
+  - `kato_looper/kato_single_fidelity.m` → `results/kato_single/fidelity/summary.csv`
+- **Stationarity (split‑half):**
+  - `kato_looper/kato_single_stationarity.m` → `results/kato_single/stationarity/summary.csv`
+- `kato_looper/kato_shared_eval.m` → `results/kato_shared/summary.csv`
