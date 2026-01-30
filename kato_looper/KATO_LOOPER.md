@@ -7,6 +7,13 @@ This is intentionally **standalone** for the `kato_looper/` subfolder.
 
 ---
 
+## If you’re new (recommended first run)
+
+- **Single‑worm fidelity:** `kato_single_fidelity.m`  
+  This is the simplest end‑to‑end run and matches the paper’s “train on full trace” setup.
+
+---
+
 ## What the scripts do
 
 ### 1) Single‑worm runs
@@ -120,13 +127,13 @@ Current Kato scripts:
 Intersection note (from this repo’s `KATO_WT_NoStim.mat`):
 - Direct intersection across all 5 worms yields **46** shared labels.
 - Restricting to labels that contain letters (likely identified neurons) yields **22**:
-  AIBL, AIBR, ALA, ASKR, AVAL, AVAR, AVBL, AVBR, AVEL, AVER, RIBL, RID,
-  RIML, RIMR, RIVL, RIVR, RMED, RMEL, RMER, SMDDR, SMDVR, VB02.
+  - AIBL, AIBR, ALA, ASKR, AVAL, AVAR, AVBL, AVBR, AVEL, AVER, RIBL, RID,
+    RIML, RIMR, RIVL, RIVR, RMED, RMEL, RMER, SMDDR, SMDVR, VB02.
 - The OSF shared set size (18) likely reflects a **curated list** (neuronList18)
   rather than raw intersection.
- - The **supplement** (journal.pcbi.1010784.s001.pdf) states a **15‑neuron** curated
-   set for the Kato analysis: AIBL, AIBR, ALA, AVAL, AVAR, AVBL, AVER, RID, RIML,
-   RIMR, RMED, RMEL, RMER, VB01, VB02.
+- The **supplement** (journal.pcbi.1010784.s001.pdf) states a **15‑neuron** curated
+  set for the Kato analysis: AIBL, AIBR, ALA, AVAL, AVAR, AVBL, AVER, RID, RIML,
+  RIMR, RMED, RMEL, RMER, VB01, VB02.
 
 ---
 

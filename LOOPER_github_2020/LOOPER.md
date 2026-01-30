@@ -4,9 +4,17 @@ This document describes **how LOOPER works in this repo**, grounded in the
 PLOS Comp Bio paper (2023) and the actual MATLAB implementation under
 `LOOPER_github_2020/Functions/`.
 
-LOOPER is an unsupervised method for compressing noisy neural population
-activity into a **set of interlocking 1‑D trajectories** ("loops") and a
-**computational scaffold** that labels each time point by:
+## LOOPER in one paragraph
+
+LOOPER is an unsupervised method that compresses noisy neural activity into a
+small set of **interlocking 1‑D trajectories** (“loops”). It labels every time
+point by a **loop ID (α)** and a **phase bin (θ)**, which together form a compact
+“computational scaffold” you can interpret, compare across systems, and use for
+simulation or prediction.
+
+LOOPER compresses noisy neural population activity into a **set of interlocking
+1‑D trajectories** ("loops") and a **computational scaffold** that labels each
+time point by:
 - a **trajectory/loop ID** (alpha), and
 - a **phase position** along that trajectory (theta/phase bin).
 

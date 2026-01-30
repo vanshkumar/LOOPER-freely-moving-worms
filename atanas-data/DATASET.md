@@ -4,6 +4,17 @@ This file summarizes the experimental conditions and data structure described in
 
 ---
 
+## Quick summary (what’s in each JSON)
+
+Each JSON corresponds to one worm recording and includes:
+- **Neural traces**: `trace_array` (neurons × time, z‑scored) and `trace_original` (same shape, raw‑like / positive).
+- **Behavior time series** (length `T`): velocity, curvature, pumping, reversal events, etc.
+- **Timing**: `timestamp_confocal`, `avg_timestep`, and derived `dt_sec`.
+- **Labels**: NeuroPAL neuron IDs and categorization (when available).
+- **Events**: heat‑pulse index for heat recordings.
+
+---
+
 ## 0) Repo JSON files (per-worm recordings from WormWideWeb)
 
 Current repo contents include **per-worm JSON files** under:
@@ -32,8 +43,8 @@ Heat (`atanas-data/heat/`):
 
 Neural traces (neuron-major):
 - `trace_array`: list length = `num_neurons`, each inner list length = `T` (timepoints).
-  - Values are centered around 0 and include negatives; appears z-scored or normalized.
-- `trace_original`: same shape as `trace_array`, but strictly positive and small-magnitude.
+  - Values are centered around 0 and include negatives; appears z‑scored or normalized.
+- `trace_original`: same shape as `trace_array`, but strictly positive and small‑magnitude.
 
 Time base:
 - `timestamp_confocal`: list length `T`; time between frames is ~0.6 sec.
@@ -70,9 +81,9 @@ Trace normalization (from paper + observed in JSONs):
 - The paper notes that some figures use **F / F_mean**, and that model fits z-score each neuron.
 - In these JSONs:
   - `trace_original` is strictly positive with small magnitude and appears consistent with **F**
-    (bleach-corrected activity/marker ratio).
-  - `trace_array` is zero-mean, unit-variance per neuron (confirmed on sample files), i.e.
-    **z-scored per neuron**.
+    (bleach‑corrected activity/marker ratio).
+  - `trace_array` is zero‑mean, unit‑variance per neuron (confirmed on sample files), i.e.
+    **z‑scored per neuron**.
 
 ### 0.3) Ranges and event windows (per worm)
 
@@ -148,6 +159,9 @@ The Key Resources Table lists multiple strains used in the study. For the whole-
 ---
 
 ## 4) Heat stimulus protocol (head-localized pulse)
+
+Plain‑language summary: a **single brief heat pulse** was applied to the head during recording,
+then the temperature decayed back to baseline over a few seconds.
 
 - Stimulus: **1436-nm infrared laser** (500 mW source) delivered **a single time** during a recording.
 - Beam at sample: expanded to ~**600 µm** at the sample plane; fed into the NIR brightfield path via a dichroic.

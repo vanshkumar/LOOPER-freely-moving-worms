@@ -3,13 +3,16 @@
 This folder contains the **Kato 2015** immobilized-worm recordings used as the
 canonical C. elegans dataset in the LOOPER paper.
 
+Why it’s here: this is the **positive control** dataset (immobilized, no stimulus),
+so loop‑like dynamics should be stable by design.
+
 Key reference:
 - Kato S. et al. *Cell* (2015), “Global Brain Dynamics Embed the Motor Command
   Sequence of *C. elegans*.” PDF: `PIIS0092867415011964.pdf`.
 
 ---
 
-## 1) What was recorded (paper summary)
+## 1) Quick facts (paper summary)
 
 From the Kato 2015 paper:
 - **Whole‑brain, single‑cell calcium imaging** with a pan‑neuronal nuclear

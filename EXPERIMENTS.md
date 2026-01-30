@@ -1,8 +1,11 @@
 # EXPERIMENTS.md
 
-These are **prototype research experiments** testing a single core hypothesis:
+These are **prototype research experiments** testing one core idea:
 
-> Neuron‑level (gene‑shaped) nonlinear feedback controllers yield **conserved macro dynamics** (e.g., locomotion loops / LOOPER scaffolds) with **animal‑specific neural coordinates**, and perturbations reveal **state‑dependent correction** (“controller fingerprints”).
+> Neuron‑level feedback controllers produce **shared, stable large‑scale dynamics**
+> (e.g., locomotion loops / LOOPER scaffolds), even if each animal uses its own
+> neural coordinates, and perturbations reveal **state‑dependent corrections**
+> (“controller fingerprints”).
 
 This file is intentionally **high‑level**. For implementation details and exact metrics, see:
 - `METHODS.md` (definitions + metrics)
@@ -12,13 +15,14 @@ This file is intentionally **high‑level**. For implementation details and exac
 
 ---
 
-## Progression (what we are trying to do)
+## Progression (step‑by‑step plan)
 
 1) **Positive control (Kato, immobilized).**
-   Verify that LOOPER + our evaluation metrics recover loop‑like dynamics on a standard dataset.
+   Check that LOOPER + our evaluation metrics recover loop‑like dynamics on a standard dataset.
 
 2) **Target test (Atanas, freely moving baseline).**
-   Run the **same fidelity + strict split‑half stationarity protocol** as a stress test of loop generalization.
+   Run the **same fidelity** (train on full trace) **+ strict split‑half stationarity**
+   (train on first half, test on second) as a stress test of loop generalization.
 
 3) **Decision point.**
    If loops are recovered under this strict protocol, proceed to perturbation/heat‑pulse analyses.
@@ -36,7 +40,7 @@ This file is intentionally **high‑level**. For implementation details and exac
 **Status:** Primary experiment definition for this repo.
 The heat‑pulse path is **out of scope** (on hold).
 
-### Targeted subclaim
+### What we’re testing
 If a stable locomotion loop exists and is **stationary across the full trace** (a strict requirement), LOOPER should:
 - recover a small number of stable loops (α),
 - yield smooth phase progression (θ) within loops,
@@ -57,8 +61,9 @@ Failure here does **not** rule out loop‑like structure on shorter windows or u
 **Status:** **On hold.** E2 is deferred until we have a dataset where LOOPER reliably recovers stable loops.
 
 ### High‑level idea (brief)
-Across distinct internal modes, the **macro scaffold topology** is conserved while “controller parameters”
-change (phase velocity profile, diffusion/noise, branch probabilities). This is **not** “return to baseline.”
+Across distinct internal modes, the **overall scaffold shape** stays the same while
+controller details change (phase velocity profile, diffusion/noise, branch probabilities).
+This is **not** “return to baseline.”
 
 ---
 

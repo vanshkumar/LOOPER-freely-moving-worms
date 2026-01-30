@@ -5,6 +5,13 @@ Updated: 2026-01-30
 
 ---
 
+## TL;DR (plain language)
+
+LOOPER can reconstruct loop‑like dynamics **within the same trace** (fidelity) for both
+Kato (immobilized) and Atanas (freely moving). But the **strict split‑half test (stationarity)**
+(train on first half, check second half) fails **even for Kato**, so this is a
+stress test that is stricter than the paper’s trial‑style validation.
+
 ## Scope
 
 We ran the same **fidelity** and **stationarity** evaluations on two datasets:
@@ -81,6 +88,8 @@ Heat‑pulse experiments are **on hold** after the baseline stationarity stress�
 - median `phase_frac_small` = **0.973**, `phase_var` = **0.309**
 
 **Interpretation:** The learned scaffold **does not generalize** to the second half of the trace under this strict criterion. Distance‑to‑scaffold grows and loop assignments are unstable. This supports the statement: **freely moving baseline worms fail the split‑half stress test**, but it does **not** by itself rule out loop‑like structure on shorter windows or under trial‑style validation.
+
+Negative `recon_corr_post` means the held‑out reconstruction is **poor** (it does not match the post‑half data).
 
 Note: split‑half drift can reflect either **true scaffold drift** or **mode mixing** (switching between multiple loop‑like regimes). A failure here does not distinguish those cases.
 

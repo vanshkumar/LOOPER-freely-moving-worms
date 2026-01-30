@@ -2,6 +2,9 @@
 
 This file summarizes **C. elegans–specific** scripts in `LOOPER_OSF_hosted_2022/` and what they do. The OSF folder contains many scripts for other datasets (primate, mouse LFP, fMRI, RNN, etc.); this document focuses only on the worm‑specific pieces.
 
+Plain‑English purpose: this explains which OSF scripts seem relevant to the
+worm analysis in the paper, and how they likely shaped the preprocessing.
+
 ---
 
 ## C. elegans–specific scripts found
@@ -70,7 +73,7 @@ The paper reports **R² = 0.79 (3 PCs)** for the C. elegans panel in Fig 5. In L
 
 There is **no worm‑specific Fig 5 plotting script** in the OSF folder. However, `buildWormData.m` concatenates **all worm traces** (after detrend + shared‑neuron selection + z‑score) into a single long matrix before computing PCA. This strongly suggests that the LOOPER model used for Fig 5B likely operated on a **concatenated multi‑worm continuous trace** rather than a single worm.
 
-**Inference (based on OSF + paper):** no worm‑specific validation split is described in the paper or OSF scripts. The Fig‑5 caption references trial boundaries (vertical lines), but the C. elegans panel has none, so the most plausible interpretation is that **Fig 5B reports full‑trace reconstruction correlation on the concatenated shared‑neuron worm dataset**, not a held‑out validation split.
+**Inference (based on OSF + paper):** no worm‑specific validation split is described in the paper or OSF scripts. The Fig‑5 caption references trial boundaries (vertical lines), but the C. elegans panel has none. The most plausible interpretation is that **Fig 5B reports full‑trace reconstruction correlation on the concatenated shared‑neuron worm dataset**, not a held‑out validation split.
 
 ---
 
@@ -91,7 +94,7 @@ If we later need to match OSF more closely, the main actionable step would be to
 
 The supplement clarifies the **exact neuron subset** used for the Kato data:
 - They restrict to **15 neurons** that are “unambiguously identified” in every worm:
-  **AIBL, AIBR, ALA, AVAL, AVAR, AVBL, AVER, RID, RIML, RIMR, RMED, RMEL, RMER, VB01, VB02**.
+  - **AIBL, AIBR, ALA, AVAL, AVAR, AVBL, AVER, RID, RIML, RIMR, RMED, RMEL, RMER, VB01, VB02**.
 
 This is smaller than:
 - the **raw intersection** across 5 worms in `KATO_WT_NoStim.mat` (46 labels),

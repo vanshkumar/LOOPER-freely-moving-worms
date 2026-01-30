@@ -1,8 +1,8 @@
 # LOOPER on freely moving worms (Atanas + Kato)
 
-This repo investigates whether **LOOPER** can recover 1‑D loop dynamics from
-**freely moving C. elegans** (Atanas NeuroPAL) and uses **immobilized Kato 2015**
-worms as a positive control.
+This repo tests whether **LOOPER** (a method for finding loop‑like neural dynamics)
+can recover 1‑D trajectories in **freely moving C. elegans** (Atanas NeuroPAL).
+It uses **immobilized Kato 2015** worms as a positive control.
 
 High‑level status:
 - **Atanas baseline (freely moving):** LOOPER **fails the strict split‑half stationarity test**
@@ -16,10 +16,11 @@ If anything in docs diverges, **scripts are the source of truth**.
 
 ## Where to start
 
-- **RESULTS.md** — current findings + key numbers (split‑half stress test vs fidelity).
-- **EXPERIMENTS.md** — the actual experiment design used here (baseline split stability).
-- **METHODS.md** — processing + evaluation details.
-- **RUNBOOK.md** — how to run the scripts.
+If you’re new, read in this order:
+1. **RESULTS.md** — current findings + key numbers (split‑half stress test vs fidelity).
+2. **EXPERIMENTS.md** — the experiment design used here (baseline split stability).
+3. **METHODS.md** — processing + evaluation details.
+4. **RUNBOOK.md** — how to run the scripts.
 
 ---
 
@@ -36,6 +37,10 @@ Dataset docs:
 ---
 
 ## Main scripts
+
+**Terminology** (used below):
+- **Fidelity** = train on the full trace, then evaluate on the same trace.
+- **Stationarity** = train on the first half, then project the full trace and test whether the second half still matches.
 
 Baseline (freely moving):
 - Fidelity: `atanas_single_fidelity.m`, `atanas_all_fidelity.m`

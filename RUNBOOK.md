@@ -1,29 +1,36 @@
 # RUNBOOK.md
 
-Minimal runbook for executing the LOOPER experiments in this repo.
+Minimal runbook for running LOOPER experiments in this repo.  
+Pick a script below; each runs LOOPER and the evaluation.
 
 ---
 
-## Fidelity (full‑trace fit)
+**Quick definitions**
+- **Fidelity** = train on the full trace, evaluate on the same trace.
+- **Stationarity** = train on the first half, evaluate the full trace (stress test).
 
-**Kato (positive control)**
+---
+
+## Kato 2015 (positive control)
+
+**Fidelity**
 - Single worm: `kato_looper/kato_single_fidelity.m`
 - All worms: `kato_looper/kato_all_fidelity.m`
 - Shared‑neuron concatenation (fidelity‑only): `kato_looper/kato_shared_run.m` → `kato_looper/kato_shared_eval.m`
 
-**Atanas (target test)**
-- Single worm: `atanas_single_fidelity.m`
-- All worms: `atanas_all_fidelity.m`
-
----
-
-## Stationarity (split‑half)
-
-**Kato (positive control)**
+**Stationarity**
 - Single worm: `kato_looper/kato_single_stationarity.m`
 - All worms: `kato_looper/kato_all_stationarity.m`
 
-**Atanas (target test)**
+---
+
+## Atanas NeuroPAL (target test)
+
+**Fidelity**
+- Single worm: `atanas_single_fidelity.m`
+- All worms: `atanas_all_fidelity.m`
+
+**Stationarity**
 - Single worm: `atanas_single_stationarity.m`
 - All worms: `atanas_all_stationarity.m`
 

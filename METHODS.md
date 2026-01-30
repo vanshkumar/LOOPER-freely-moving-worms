@@ -32,14 +32,15 @@ This document is the **implementation blueprint** for those steps: shared pipeli
 - Optional detrending is applied **only on the training half** when enabled.
 
 **Step C — Fit LOOPER**
-- **Fidelity:** train on the full trace.
-- **Stationarity:** train on the **first half** (pre), then project the **full trace**.
+- **Fidelity** (train on full trace): train on the full trace.
+- **Stationarity** (train on first half): train on the **first half** (pre), then project the **full trace**.
 
 **Step D — Evaluate**
-- Use LOOPER’s scaffold (`BestStateMap`, `BestLoopAssignments`) to derive:
-  - loop ID α and phase bin θ,
+- Use LOOPER’s **scaffold** (a map that labels each time point by **loop ID α** and **phase bin θ**)
+  from `BestStateMap` and `BestLoopAssignments` to compute:
   - distance to scaffold `d(t)`,
-  - split‑based drift metrics and phase continuity metrics.
+  - split‑based drift metrics,
+  - phase continuity metrics.
 
 This protocol is identical across Kato and Atanas; only the **dataset‑specific preprocessing/params** differ (see Section 5).
 
@@ -57,6 +58,8 @@ We run two tests for **both datasets**:
 - `recon_corr_full` (correlation between reconstructed and embedded stream; **not** true R²)
 - Stable loop assignment (few switches relative to trace length)
 - Smooth phase progression (`phase_frac_small` high, `phase_var` low)
+  - `phase_frac_small`: fraction of within‑loop phase steps with |Δθ| ≤ 1 bin (after wrap).
+  - `phase_var`: variance of those wrapped per‑step Δθ values (lower = smoother).
 
 ### 3.2 Stationarity test (split‑half, **stress test**)
 - Train on the first half, project the full trace.
@@ -68,6 +71,7 @@ We run two tests for **both datasets**:
 - `recon_corr_post` is not drastically worse than pre‑half reconstruction
 
 These are **qualitative criteria** (no fixed thresholds). The stationarity test is intentionally strict and serves as a **stress test**; failure here does not necessarily rule out loop‑like structure under trial‑based or windowed validation.
+Put another way: this test is “does the first half explain the second half?” It does **not** prove that loops are absent if it fails.
 
 ### 3.3 Summary schema (identical across datasets)
 
