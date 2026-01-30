@@ -10,13 +10,20 @@ classdef looper_helpers
 
         function summary = base_summary(saveData, diag, meta)
             % Build summary fields shared across evals.
+            if nargin < 1 || isempty(saveData) || ~isstruct(saveData)
+                saveData = struct;
+            end
             if nargin < 3
                 meta = struct;
             end
 
             uid = '';
+            status = 'ok';
             if isfield(meta, 'uid') && ~isempty(meta.uid)
                 uid = meta.uid;
+            end
+            if isfield(meta, 'status') && ~isempty(meta.status)
+                status = meta.status;
             end
 
             n_neurons = nan;
@@ -72,7 +79,7 @@ classdef looper_helpers
                 reconCorr = diag.recon_corr_full;
             end
 
-            summary = struct('uid', uid, 'n_neurons', n_neurons, 'T', T, 'dt_sec', dt, ...
+            summary = struct('uid', uid, 'status', status, 'n_neurons', n_neurons, 'T', T, 'dt_sec', dt, ...
                 'unique_loops', uniqueLoops, 'loop_switches', loopSwitches, 'segments', segments, ...
                 'validation_score_mean', valMean, 'validation_score_std', valStd, ...
                 'recon_corr_full', reconCorr, ...

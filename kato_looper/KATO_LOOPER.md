@@ -9,7 +9,7 @@ This is intentionally **standalone** for the `kato_looper/` subfolder.
 
 ## What the scripts do
 
-### 1) Single‑worm runs (implemented)
+### 1) Single‑worm runs
 #### Fidelity (full‑trace reconstruction)
 - **Run + eval:** `kato_single_fidelity.m`
   - Loads the first Kato worm via `load_kato_data`.
@@ -25,13 +25,12 @@ This is intentionally **standalone** for the `kato_looper/` subfolder.
 - **Run + eval:** `kato_single_stationarity.m`
   - Loads the first Kato worm via `load_kato_data`.
   - Applies per‑neuron detrend across time (pending OSF clarification).
-  - Trains on the **first half** and evaluates on the full trace (stricter stationarity test).
+  - Trains on the **first half** and evaluates on the full trace (strict split‑half **stress test**).
   - **Goal:** test whether a scaffold learned early remains valid later in the same recording.
   - Saves to `results/kato_single/stationarity/kato_single_stationarity.mat` and writes
     `results/kato_single/stationarity/summary.csv` + diagnostics.
   - Computes a **held‑out post‑half reconstruction correlation** (`recon_corr_post`) as
-    a stricter positive control (closer to the paper’s held‑out validation setup, though
-    not an exact Fig‑5B reproduction).
+    a strict generalization check (not the same as the paper’s trial‑style validation).
   - Implementation: calls `looper_run_core.m` + `looper_eval_core.m`.
 
 ### 2) All‑worms runs
@@ -49,7 +48,7 @@ Goal: run LOOPER independently on all 5 worms and evaluate each result.
 #### Stationarity (split‑half)
 - **Run + eval:** `kato_all_stationarity.m`
   - Loop over all worms from `load_kato_data`.
-  - Train on the **first half** for each worm (stationarity test).
+  - Train on the **first half** for each worm (strict split‑half **stress test**).
   - **Goal:** check scaffold stability across time for each worm.
   - Save one result per worm (`results/kato_all/stationarity/worm_*.mat`) and a manifest.
   - Writes `results/kato_all/stationarity/summary.csv` + diagnostics.

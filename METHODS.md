@@ -14,9 +14,9 @@ This is intentionally **research/prototype** oriented:
 ## 1) How this maps to EXPERIMENTS
 
 `EXPERIMENTS.md` lays out the progression:
-1. **Positive control (Kato, immobilized):** confirm LOOPER recovers loop‑like dynamics.
-2. **Target test (Atanas, freely moving):** run the same protocol on freely moving worms.
-3. **Decision point:** proceed to perturbation only if the loop scaffold is stable.
+1. **Positive control (Kato, immobilized):** confirm LOOPER recovers loop‑like dynamics in fidelity.
+2. **Target test (Atanas, freely moving):** run the same fidelity + **strict split‑half stationarity** protocol.
+3. **Decision point:** proceed to perturbation only if loops pass this strict stationarity stress test.
 
 This document is the **implementation blueprint** for those steps: shared pipeline, metrics, and dataset‑specific settings.
 
@@ -58,7 +58,7 @@ We run two tests for **both datasets**:
 - Stable loop assignment (few switches relative to trace length)
 - Smooth phase progression (`phase_frac_small` high, `phase_var` low)
 
-### 3.2 Stationarity test (split‑half)
+### 3.2 Stationarity test (split‑half, **stress test**)
 - Train on the first half, project the full trace.
 - Evaluate whether the learned scaffold remains valid in the second half.
 
@@ -67,7 +67,7 @@ We run two tests for **both datasets**:
 - Phase continuity remains stable in the post half
 - `recon_corr_post` is not drastically worse than pre‑half reconstruction
 
-These are **qualitative criteria** (no fixed thresholds). The stationarity test is intentionally strict; failure here does not necessarily rule out loop‑like structure under trial‑based or windowed validation.
+These are **qualitative criteria** (no fixed thresholds). The stationarity test is intentionally strict and serves as a **stress test**; failure here does not necessarily rule out loop‑like structure under trial‑based or windowed validation.
 
 ### 3.3 Summary schema (identical across datasets)
 
@@ -112,7 +112,7 @@ For split alignment, `compute_delta_d`:
 - `MinReturnTime = 10`, `MaxCheckTime = 10`
 - **Detrending enabled** (per‑neuron linear detrend)
 
-Both datasets use the same fidelity + stationarity protocol and identical evaluation metrics.
+Both datasets use the same fidelity + stationarity protocol and identical evaluation metrics; stationarity is treated as a **stress test**, not a definitive absence‑of‑loops claim.
 
 ---
 

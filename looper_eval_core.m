@@ -75,7 +75,12 @@ function looper_eval_core(dataset, mode, scope)
             mkdir(diagDir);
         end
 
-        if mode == "stationarity"
+        if ~has_required_fields_(saveData)
+            fprintf('Skipping %s (missing LOOPER fields).\n', tag);
+            meta = meta_from_worm_(worm, dt);
+            meta.status = 'failed_missing_fields';
+            summary = looper_helpers.base_summary(struct(), struct(), meta);
+        elseif mode == "stationarity"
             [preIdx, postIdx, t_on] = stationarity_split_(dataset, worm, saveData);
             diag = run_looper_diagnostics(saveData, struct('tag', tag, 'outDir', diagDir, ...
                 'dt_sec', dt, 'preIdxRaw', preIdx, 'postIdxRaw', postIdx, 'tOnRaw', t_on));
@@ -132,7 +137,12 @@ function looper_eval_core(dataset, mode, scope)
         end
 
         diagDir = fullfile(diagRoot, tag);
-        if mode == "stationarity"
+        if ~has_required_fields_(saveData)
+            fprintf('Skipping %s (missing LOOPER fields).\n', tag);
+            meta = meta_from_worm_(worm, dt);
+            meta.status = 'failed_missing_fields';
+            summary = looper_helpers.base_summary(struct(), struct(), meta);
+        elseif mode == "stationarity"
             [preIdx, postIdx, t_on] = stationarity_split_(dataset, worm, saveData);
             diag = run_looper_diagnostics(saveData, struct('tag', tag, 'outDir', diagDir, ...
                 'dt_sec', dt, 'preIdxRaw', preIdx, 'postIdxRaw', postIdx, 'tOnRaw', t_on));
@@ -179,4 +189,15 @@ function [preIdx, postIdx, t_on] = stationarity_split_(dataset, worm, saveData)
     preIdx = saveData.TrainSplit.preIdx;
     postIdx = saveData.TrainSplit.postIdx;
     t_on = postIdx(1);
+end
+
+function ok = has_required_fields_(saveData)
+    required = {'BestStateMap', 'BestLoopAssignments', 'FinalStream'};
+    ok = isstruct(saveData);
+    for i = 1:numel(required)
+        if ~ok || ~isfield(saveData, required{i}) || isempty(saveData.(required{i}))
+            ok = false;
+            return;
+        end
+    end
 end

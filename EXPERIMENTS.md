@@ -18,11 +18,16 @@ This file is intentionally **high‑level**. For implementation details and exac
    Verify that LOOPER + our evaluation metrics recover loop‑like dynamics on a standard dataset.
 
 2) **Target test (Atanas, freely moving baseline).**
-   Run the **same fidelity + stationarity protocol** to test whether loops generalize to freely moving worms.
+   Run the **same fidelity + strict split‑half stationarity protocol** as a stress test of loop generalization.
 
 3) **Decision point.**
-   If loops are recovered in Atanas under this protocol, proceed to perturbation/heat‑pulse analyses.
-   If not, treat as a negative result and pause E2.
+   If loops are recovered under this strict protocol, proceed to perturbation/heat‑pulse analyses.
+   If not, treat as a **stress‑test failure** (not definitive absence) and pause E2.
+
+4) **Next step (stationarity criterion).**
+   Define a stationarity test that the **Kato positive control reliably passes** (e.g., paper‑style
+   trial validation or windowed stationarity), then apply the same test to Atanas before making
+   stronger conclusions.
 
 ---
 
@@ -32,7 +37,7 @@ This file is intentionally **high‑level**. For implementation details and exac
 The heat‑pulse path is **out of scope** (on hold).
 
 ### Targeted subclaim
-If a stable locomotion loop exists in freely moving worms, LOOPER should:
+If a stable locomotion loop exists and is **stationary across the full trace** (a strict requirement), LOOPER should:
 - recover a small number of stable loops (α),
 - yield smooth phase progression (θ) within loops,
 - generalize across time (pre → post split) without large drift from the scaffold.
@@ -43,6 +48,7 @@ If a stable locomotion loop exists in freely moving worms, LOOPER should:
 - Project the full trace and evaluate drift + loop‑ishness metrics.
 
 This split‑half test is intentionally **strict** and is not the same as the paper’s trial‑based validation.
+Failure here does **not** rule out loop‑like structure on shorter windows or under trial‑style validation.
 
 ---
 

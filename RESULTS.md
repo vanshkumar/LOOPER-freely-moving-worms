@@ -1,111 +1,117 @@
 # RESULTS.md
 
-Negative and positive results from the LOOPER experiments in this repo.  
-Updated: 2026-01-27
+Summary of results from the LOOPER experiments in this repo.  
+Updated: 2026-01-30
 
 ---
 
 ## Scope
 
-We evaluated whether LOOPER recovers stable, loop-like dynamics in:
+We ran the same **fidelity** and **stationarity** evaluations on two datasets:
 
-- **Freely moving NeuroPAL worms** (Atanas baseline recordings; train on first half, project full trace).
-- **Immobilized Kato 2015 worms** (positive control; expected to match LOOPER paper behavior).
+- **Kato 2015 (immobilized) – positive control**
+- **Atanas NeuroPAL baseline (freely moving) – target dataset**
 
-Heat-pulse experiments were deprecated after baseline failed to recover stable loops.
+**Fidelity** = train on full trace, evaluate reconstruction / loop metrics on the same trace.  
+**Stationarity** = train on first half, project full trace, evaluate post‑half drift away from the scaffold.
 
----
-
-## Atanas baseline (freely moving) — **negative result**
-
-**Setup**
-- Train LOOPER on **first half** of each baseline recording (paper windows).
-- Project full trace onto learned scaffold.
-- Evaluate Δd, loop assignment stability, and phase-continuity metrics.
-
-**Aggregate results** (from `results/atanas_all/stationarity/summary.csv`, n=21 worms):
-
-- median `mean_post` ≈ **31.46**
-- median `post_slope` ≈ **0.06498**
-- median `d_peak` ≈ **72.09**
-- median `phase_speed_bins_per_min` = **(recompute after eval rerun)**
-- median `unique_loops` = **2**
-- median `loop_switches` = **22**
-- median `median_d` ≈ **36.49**
-
-**Interpretation**
-- Post-split distances to the scaffold grow large and continue drifting upward.
-- Loop ID (`alpha`) is unstable over time (frequent switches).
-- Phase continuity metrics are not strong enough to support stable cyclic dynamics.
-
-**Conclusion (nuanced)**
-Under this **strict split‑half stationarity test**, we do **not** see evidence that a single
-stable scaffold generalizes across the full recording in freely moving Atanas baseline worms.
-This does **not** rule out loop‑like structure on shorter windows or under trial‑style /
-pseudo‑trial validation schemes.
+Heat‑pulse experiments are **on hold** after the baseline stationarity stress‑test results (see below).
 
 ---
 
-## Detrending check (single worm, Atanas baseline)
+## Kato shared‑neuron concatenated run (paper‑style repro)
+`results/kato_shared/summary.csv`
 
-We tested a simple linear detrend (fit on pre-split, applied to full trace) for one worm (2022-06-14-01).
+- `n_neurons` = **22**, `T` = **15662**, `dt_sec` = **0.344**
+- `recon_corr_full` = **0.661**
+- `unique_loops` = **2**, `loop_switches` = **87**
+- `phase_frac_small` = **0.993**, `phase_var` = **0.133**
 
-**No detrend**
-- `mean_post` = **19.05**
-- `post_slope` = **0.064**
-- `d_peak` = **50.30**
-- `loop_switches` = **6**
+**Setup note:** This concatenates all 5 worms on the intersection of identified neurons (22) with per‑worm detrend+z‑score before concatenation; this is the closest run to the paper’s shared‑neuron setup (though not an exact reproduction).
 
-**With detrend**
-- `mean_post` = **26.69**
-- `post_slope` = **0.102**
-- `d_peak` = **64.06**
-- `loop_switches` = **59**
-
-**Conclusion**
-Detrending **did not improve** generalization or loop stability; it worsened drift and alpha switching.
+**Interpretation:** Full‑trace reconstruction is strong and phase continuity is high. Loop switching is higher because this run concatenates multiple worms into a single trace.
 
 ---
 
-## Kato 2015 (immobilized) — **positive control**
+## Kato 2015 (immobilized) — positive control
 
-LOOPER recovers **loop‑like structure** in Kato data (high phase continuity, low switching),
-consistent with the paper’s qualitative behavior, even though strict split‑half generalization
-does not hold (see note below).
+### Fidelity (all worms, n=5)
+`results/kato_all/fidelity/summary.csv`
 
-**Key numbers (shared‑neuron concatenated run):**
-- `summary.csv`: `results/kato_shared/summary.csv`
-- `n_neurons = 22`, `T = 15662`, `dt_sec = 0.344`
-- `unique_loops = 3`, `loop_switches = 96` (segments = 97, mean_segment_len = 194.0)
-- `phase_frac_small = 0.995`, `phase_var = 0.111`
-- `median_d = 14.97`
-- `validation_score_mean = 10.46` (std = 0.815)
-- `phase_speed_bins_per_min = (recompute after eval rerun)`
+- median `recon_corr_full` = **0.572**
+- median `unique_loops` = **3**, `loop_switches` = **6**
+- median `phase_frac_small` = **0.997**, `phase_var` = **0.050**
+- median `phase_speed_bins_per_min` = **5.81**
 
-**Comparability caveat (important):**
-The paper’s Fig 5B reports **R² reconstruction** (and equivalent #PCs) and validation
-correlations on held‑out trials. Our `summary.csv` is based on LOOPER diagnostics
-correlations in embedded space and phase‑continuity metrics, so it is **not directly
-comparable** to Fig 5B. The phase‑speed estimate is especially sensitive to loop switching
-and concatenation across worms, so treat it as **qualitative only**.
+**Interpretation:** LOOPER recovers stable loop‑like structure in immobilized worms under the full‑trace fidelity test (positive control passes).
 
-**Split‑half nuance (Atanas vs Kato):**
-The split‑half test is a **strong stationarity test**. Kato still shows loop‑like phase behavior
-under this test (high phase continuity), but the learned scaffold does **not** generalize across
-the full trace. Atanas shows **both** poor generalization **and** weaker loop‑like phase
-structure. So Kato remains a stronger positive control even though split‑half generalization
-fails there too.
+### Stationarity (split‑half, n=5) — **stress/generalization test**
+`results/kato_all/stationarity/summary.csv`
+
+- median `mean_post` = **81.10**
+- median `post_slope` = **0.263**
+- median `d_peak` = **164.69**
+- median `recon_corr_post` = **−0.025**
+- median `phase_frac_small` = **0.994**, `phase_var` = **0.048**
+
+**Interpretation:** The **strict split‑half stationarity test fails** (large drift, poor post‑half reconstruction), even though the phase metrics still look loop‑like. This indicates the split‑half test is a **stress/generalization criterion** that is **stricter** than the paper’s trial‑style validation, and may not align with how persistence was measured in the paper.
+
+---
+
+## Atanas baseline (freely moving) — fails the split‑half stress test
+
+### Fidelity (full trace, n=21)
+`results/atanas_all/fidelity/summary.csv`
+
+- median `recon_corr_full` = **0.594**
+- median `unique_loops` = **2**, `loop_switches` = **14**
+- median `phase_frac_small` = **0.986**, `phase_var` = **0.291**
+- median `phase_speed_bins_per_min` = **15.11**
+
+**Interpretation:** Fidelity metrics are **comparable in magnitude to the Kato positive control** (same‑trace reconstruction and high phase continuity), suggesting loop‑like structure is present in‑sample, though phase smoothness is weaker than Kato. Fidelity alone does not establish **temporal stability** or generalization.
+
+### Stationarity (split‑half, n=21) — **stress test**
+`results/atanas_all/stationarity/summary.csv`
+
+- median `mean_post` = **31.46**
+- median `post_slope` = **0.06498**
+- median `d_peak` = **72.09**
+- median `recon_corr_post` = **−0.045**
+- median `unique_loops` = **2**, `loop_switches` = **22**
+- median `phase_frac_small` = **0.973**, `phase_var` = **0.309**
+
+**Interpretation:** The learned scaffold **does not generalize** to the second half of the trace under this strict criterion. Distance‑to‑scaffold grows and loop assignments are unstable. This supports the statement: **freely moving baseline worms fail the split‑half stress test**, but it does **not** by itself rule out loop‑like structure on shorter windows or under trial‑style validation.
+
+Note: split‑half drift can reflect either **true scaffold drift** or **mode mixing** (switching between multiple loop‑like regimes). A failure here does not distinguish those cases.
+
+---
+
+## Overall conclusion (relative to EXPERIMENTS)
+
+1. **Positive control succeeds for fidelity** on Kato immobilized worms, consistent with the paper’s reported behavior.
+2. **Strict split‑half stationarity fails** even for Kato worms, so this test is a **stress criterion** that is stronger than the paper’s trial‑based validation.
+3. **Atanas fidelity shows loop‑like structure** with metrics comparable in magnitude to Kato (in‑sample fit only).
+4. **Atanas stationarity fails the split‑half stress test** and shows weaker phase‑continuity metrics than Kato. This is evidence **against** long‑range stationarity under this criterion, not definitive evidence that loops are absent, and may reflect a metric stricter than the paper’s validation regime.
+5. Heat‑pulse analyses are **on hold** pending a better‑matched stationarity test or behavior‑segmented analyses.
+
+---
+
+## Next step (stationarity metric)
+
+The current split‑half stationarity test is a **stress test** that even the Kato positive control fails.  
+Before drawing stronger conclusions about Atanas stationarity, we should define a **stationarity criterion that Kato reliably passes**, then apply the same criterion to Atanas. Two candidate directions:
+
+- **Paper‑style trial validation** (closer to LOOPER’s reported regime).
+- **Windowed stationarity** (shorter contiguous windows rather than full‑trace split‑half).
+
+This keeps the positive control meaningful and avoids comparing Atanas to an overly strict bar.
 
 ---
 
 ## Artifacts / where to look
 
-- Atanas stationarity summary: `results/atanas_all/stationarity/summary.csv`
-- Atanas single stationarity: `results/atanas_single/stationarity/summary.csv`
-- Kato summaries (to generate):
-## Kato single-worm checks
-- **Fidelity (full trace):**
-  - `kato_looper/kato_single_fidelity.m` → `results/kato_single/fidelity/summary.csv`
-- **Stationarity (split‑half):**
-  - `kato_looper/kato_single_stationarity.m` → `results/kato_single/stationarity/summary.csv`
-- `kato_looper/kato_shared_eval.m` → `results/kato_shared/summary.csv`
+- Atanas fidelity summaries: `results/atanas_all/fidelity/summary.csv`
+- Atanas stationarity summaries: `results/atanas_all/stationarity/summary.csv`
+- Kato fidelity summaries: `results/kato_all/fidelity/summary.csv`
+- Kato stationarity summaries: `results/kato_all/stationarity/summary.csv`
+- Kato shared run: `results/kato_shared/summary.csv`

@@ -27,10 +27,11 @@ function diag = run_looper_diagnostics(saveData, opts)
         end
     end
 
-    addpath(fullfile(pwd, 'LOOPER_github_2020', 'Functions'));
-    addpath(fullfile(pwd, 'LOOPER_github_2020', 'Functions', 'Library'));
-    addpath(fullfile(pwd, 'LOOPER_github_2020', 'Functions', 'Library', 'Tubeplot'));
-    addpath(fullfile(pwd, 'LOOPER_OSF_hosted_2022'));
+    rootDir = fileparts(mfilename('fullpath'));
+    addpath(fullfile(rootDir, 'LOOPER_github_2020', 'Functions'));
+    addpath(fullfile(rootDir, 'LOOPER_github_2020', 'Functions', 'Library'));
+    addpath(fullfile(rootDir, 'LOOPER_github_2020', 'Functions', 'Library', 'Tubeplot'));
+    addpath(fullfile(rootDir, 'LOOPER_OSF_hosted_2022'));
 
     if ~isfield(opts, 'saveFigs')
         opts.saveFigs = true;

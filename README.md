@@ -5,10 +5,9 @@ This repo investigates whether **LOOPER** can recover 1‑D loop dynamics from
 worms as a positive control.
 
 High‑level status:
-- **Atanas baseline (freely moving):** LOOPER does **not** recover stable loops
-  under the split‑half evaluation used here (negative result).
-- **Heat‑pulse path:** deprecated (kept only as reference).
-- **Kato 2015 (immobilized):** LOOPER recovers loop‑like structure in shared‑neuron runs,
+- **Atanas baseline (freely moving):** LOOPER **fails the strict split‑half stationarity test**
+  used here; this is a stress‑test result, not a definitive “no loops” claim.
+- **Kato 2015 (immobilized):** LOOPER recovers loop‑like structure in fidelity runs,
   broadly consistent with the paper’s qualitative behavior.
 
 If anything in docs diverges, **scripts are the source of truth**.
@@ -17,7 +16,7 @@ If anything in docs diverges, **scripts are the source of truth**.
 
 ## Where to start
 
-- **RESULTS.md** — current findings + key numbers (Atanas negative result, Kato positive control).
+- **RESULTS.md** — current findings + key numbers (split‑half stress test vs fidelity).
 - **EXPERIMENTS.md** — the actual experiment design used here (baseline split stability).
 - **METHODS.md** — processing + evaluation details.
 - **RUNBOOK.md** — how to run the scripts.
