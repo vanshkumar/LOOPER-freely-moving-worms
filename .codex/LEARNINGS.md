@@ -13,3 +13,4 @@
 - 2026-01-28: `pip install` failed due to no network access in the sandbox; avoid adding Python deps (e.g., SciPy) and use MATLAB or in-repo fallbacks instead.
 - 2026-01-28: `plotReconstruction.m` defines `Rcorr` (not `Rsquared`); diagnostics must read `Rcorr` to capture reconstruction correlation, otherwise `recon_corr_full` stays NaN.
 - 2026-01-28: LOOPER overwrites `saveData`; any custom fields (e.g., `TrainSplit`, `Detrend`) must be reattached **after** calling `LOOPER(...)` or they will be missing in saved `.mat` files and break downstream eval aggregation.
+- 2026-01-30: Split-half “stationarity” is treated as a stress test that can fail even on Kato; docs now emphasize behavior-/mode-conditioned stationarity (Atanas JSONs include behavior time series) as a likely next step.

@@ -112,6 +112,7 @@ Before drawing stronger conclusions about Atanas stationarity, we should define 
 
 - **Paper‑style trial validation** (closer to LOOPER’s reported regime).
 - **Windowed stationarity** (shorter contiguous windows rather than full‑trace split‑half).
+- **Behavior‑conditioned stationarity** (segment by locomotor mode / behavior state using Atanas behavior time series; fit/validate within‑mode, or allow multiple scaffolds).
 
 This keeps the positive control meaningful and avoids comparing Atanas to an overly strict bar.
 

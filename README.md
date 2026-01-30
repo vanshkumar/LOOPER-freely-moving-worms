@@ -9,10 +9,25 @@ High‑level status:
   used here; this is a stress‑test result, not a definitive “no loops” claim.
 - **Kato 2015 (immobilized):** LOOPER recovers loop‑like structure in fidelity runs,
   broadly consistent with the paper’s qualitative behavior.
+- **Time‑split generalization:** a simple time‑split (fit early, evaluate late) degrades in **both**
+  datasets, suggesting that **slow drift and/or behavioral mode switching** is a major confound.
+  Next step is likely **behavior‑conditioned** scaffolds/metrics rather than a single global loop.
 
 If anything in docs diverges, **scripts are the source of truth**.
 
 ---
+
+## Research framing (why this repo exists)
+
+LOOPER extracts a **computational scaffold**: a set of interlocking 1‑D trajectories (loops)
+in neural state space. For locomotion, loop‑like structure could reflect:
+1) largely **intrinsic attractor dynamics** (CPG / internal dynamics),
+2) **closed‑loop control**, where sensory feedback shapes/stabilizes the loop,
+3) or a **hybrid**.
+
+This repo’s near‑term goal is not to “prove loops exist”, but to measure **when/where a stable
+scaffold exists** in freely moving data and what breaks **stationarity** (drift vs mode mixing),
+so that perturbation‑style tests are grounded in a validated baseline.
 
 ## Where to start
 

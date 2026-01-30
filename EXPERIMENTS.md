@@ -2,10 +2,13 @@
 
 These are **prototype research experiments** testing one core idea:
 
-> Neuron‑level feedback controllers produce **shared, stable large‑scale dynamics**
-> (e.g., locomotion loops / LOOPER scaffolds), even if each animal uses its own
-> neural coordinates, and perturbations reveal **state‑dependent corrections**
-> (“controller fingerprints”).
+> A locomotion “loop” in neural state space might reflect either:
+> 1) largely **intrinsic attractor dynamics** (CPG / internal dynamics), or
+> 2) **closed‑loop control**, where sensory feedback shapes/stabilizes the loop (or a hybrid).
+>
+> LOOPER gives a compact description (a scaffold) of the dynamics; this repo uses it to
+> test **when** loops appear stable, and what breaks **stationarity**, as a prerequisite for
+> perturbation‑style attempts to distinguish the two framings.
 
 This file is intentionally **high‑level**. For implementation details and exact metrics, see:
 - `METHODS.md` (definitions + metrics)
@@ -14,6 +17,16 @@ This file is intentionally **high‑level**. For implementation details and exac
 **Source of truth:** the MATLAB scripts in this repo are authoritative.
 
 ---
+
+## Framing question (intrinsic vs closed-loop)
+
+LOOPER by itself does **not** tell you whether a loop is intrinsic or feedback‑stabilized; both can
+produce similar-looking cyclic trajectories. What *can* help separate them is comparing the
+scaffold across conditions that change feedback or controllability (e.g., sensory perturbations,
+closed‑loop vs open‑loop stimulus replay, altered proprioception), and looking for signatures like:
+- stability/phase‑velocity changes under feedback disruption,
+- state‑dependent corrective transients after perturbations,
+- mode‑specific scaffolds (gain scheduling) rather than a single global loop.
 
 ## Progression (step‑by‑step plan)
 
@@ -30,8 +43,8 @@ This file is intentionally **high‑level**. For implementation details and exac
 
 4) **Next step (stationarity criterion).**
    Define a stationarity test that the **Kato positive control reliably passes** (e.g., paper‑style
-   trial validation or windowed stationarity), then apply the same test to Atanas before making
-   stronger conclusions.
+   trial validation, windowed stationarity, or **behavior‑conditioned** stationarity), then apply
+   the same test to Atanas before making stronger conclusions.
 
 ---
 
