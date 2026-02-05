@@ -14,3 +14,4 @@
 - 2026-01-28: `plotReconstruction.m` defines `Rcorr` (not `Rsquared`); diagnostics must read `Rcorr` to capture reconstruction correlation, otherwise `recon_corr_full` stays NaN.
 - 2026-01-28: LOOPER overwrites `saveData`; any custom fields (e.g., `TrainSplit`, `Detrend`) must be reattached **after** calling `LOOPER(...)` or they will be missing in saved `.mat` files and break downstream eval aggregation.
 - 2026-01-30: Split-half “stationarity” is treated as a stress test that can fail even on Kato; docs now emphasize behavior-/mode-conditioned stationarity (Atanas JSONs include behavior time series) as a likely next step.
+- 2026-02-05: In this sandbox, some `multi_tool_use.parallel` batches that include `pdftotext` can be rejected even when single-command `pdftotext` works; run PDF extraction commands sequentially if parallel batch execution fails.
