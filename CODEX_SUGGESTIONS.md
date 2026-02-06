@@ -1,248 +1,259 @@
-# CODEX_SUGGESTIONS
+# CODEX_SUGGESTIONS (Revised After Reading `December 2025 Aliveline`)
 
-## Repository Understanding (Current State)
+This revision is based on the full daily log timeline, not just repo code/docs.
 
-The repository is doing a careful LOOPER replication and stress test in two regimes:
+## What The Logs Show (First-Principles Diagnosis)
 
-- Positive control: Kato 2015 immobilized worms.
-- Target: Atanas 2023 freely moving worms (baseline first, heat on hold).
+Your month produced real progress, but the logs show four recurring bottlenecks:
 
-The same two evaluations are applied to both:
+1. Question quality lagged behind execution speed.
+2. Dataset assumptions were often discovered late.
+3. Evaluation metrics were selected before metric validity was fully established.
+4. LLM output quality was high for implementation, mixed for framing/prioritization.
 
-- Fidelity: fit and evaluate on the same trace.
-- Stationarity stress test: fit first half, evaluate second half.
+The most important insight from the logs is not "LLMs made mistakes." It is:
 
-Current result pattern (from docs and summaries):
+`Execution bandwidth > epistemic bandwidth` most of the time.
 
-- Fidelity is decent in both datasets.
-- The strict split-half stationarity test fails in Atanas and also fails in Kato.
-- This means the current stationarity metric is likely stricter than the paper-style validation regime.
-- The key scientific bottleneck is now metric validity and mode/state mixing, not just "does LOOPER fit in-sample."
+That is why code advanced quickly while question quality, control design, and interpretation lagged.
 
-This is a strong and honest framing.
+## 1) Process Improvements For LLM Co-Working Across The Whole Science Loop
 
-## 1) Process Improvements for Co-Working with LLMs Across the Science Cycle
+### A. Add A Mandatory Question Gate Before Any Coding
 
-### A. Put a Hard "Claim Contract" in Front of Every LLM Run
+For every experiment idea, require this one-page spec before touching code:
 
-Before any coding prompt, force a short structured preamble:
+- `Question`: one sentence, decision-relevant.
+- `Testable claim`: falsifiable with current data.
+- `Observable`: exactly what quantity will move.
+- `Comparator`: what baseline/control must be beaten.
+- `Non-identifiability`: what this experiment cannot distinguish.
+- `Kill condition`: explicit condition to stop.
 
-- `Claim`: what statement you want to support or refute.
-- `Observable`: exact metric(s) and file(s) that will move.
-- `Comparator`: what baseline/control must be passed.
-- `Fail condition`: explicit reason to reject the run.
+This directly addresses the Day 31 realization that the heat-recovery question was under-specified.
 
-Why this helps here:
+### B. Add A Dataset Suitability Gate
 
-- Your current ambiguity is not coding quality. It is claim quality (stationarity definition vs paper claim).
-- A contract prevents LLMs from optimizing the wrong target.
+Before implementing analysis, fill a short table per dataset:
 
-### B. Use a Two-LLM Workflow by Default
+- recording regime (`immobilized`, `freely moving`, `stimulated`)
+- trial structure vs continuous stream
+- known nonstationarities and inputs
+- required metadata available or missing
+- whether the target claim is identifiable in this dataset
 
-For non-trivial analyses, split LLM roles:
+This would have flagged the Kato `WT_Stim` vs `NoStim` mismatch earlier and saved iteration loops.
 
-- `Builder`: writes code/docs.
-- `Skeptic`: only attacks assumptions, leakage, and over-interpretation.
+### C. Separate Three LLM Roles
 
-Apply skeptic review to:
+Use three explicit roles in sequence:
 
-- split definitions,
-- leakage in preprocessing,
-- proxy metrics (`recon_corr_full` usage),
-- conclusions in `RESULTS.md`.
+- `Architect`: refine question and controls only.
+- `Builder`: implement code only.
+- `Auditor`: attack leakage/confounds and interpretation.
 
-This directly matches your current failure mode (metric mismatch, not implementation bugs).
+Do not let `Builder` choose the scientific question.
 
-### C. Add a "Metric Provenance" Block to Every Result CSV
+### D. Enforce A Metric Validation Ladder
 
-Write a sidecar metadata file (or extra columns) on each run with:
+A metric can enter `RESULTS.md` only after passing:
+
+1. synthetic sanity check,
+2. positive-control expectation check,
+3. surrogate/null behavior check.
+
+The logs show this was learned empirically after split-half stress tests failed even for Kato.
+
+### E. Track Evidence, Not Narrative
+
+Create `docs/CLAIMS_LEDGER.md` with one row per claim:
+
+- `claim_id`
+- `status` (`supported`, `open`, `refuted`)
+- `best_evidence_file`
+- `controls_passed`
+- `known confounds`
+
+This prevents accidental over-interpretation during fast LLM-assisted writing.
+
+### F. Introduce A Weekly Human Checkpoint By Design
+
+The Connor email was a high-leverage intervention and came late.
+
+Make this default:
+
+- one external expert check every 7 days,
+- with a fixed template: question, current evidence, what could falsify, next decision.
+
+### G. Add A "Thinking Buffer" To The Workflow
+
+Your reflections explicitly note that 20 minutes of unstructured thinking corrected major framing errors.
+
+Operationalize this:
+
+- After any major run, no coding for 20-30 minutes.
+- Write: what the run says, what it does not say, next cheapest disambiguating test.
+
+### H. Add Provenance To Every Summary Output
+
+Append metadata sidecars to each result:
 
 - commit hash,
 - script entrypoint,
-- parameter struct hash,
-- dataset split policy,
-- metric implementation version.
+- parameter hash,
+- metric version tag,
+- split policy,
+- dataset id.
 
-Why:
+This helps when multiple LLM/model/tool versions are involved.
 
-- LLM-assisted repos drift quickly in definitions even when code still runs.
-- You need to know if two CSV rows are scientifically comparable.
+### I. Build A Lightweight "LLM Arbitration" Rule
 
-### D. Adopt a Small Test Ladder for Metrics
+When two models disagree:
 
-For every new metric, require 3 tests before interpretation:
+- require concrete reproduction steps from both,
+- run smallest discriminating check,
+- log winner and reason in `.codex/LEARNINGS.md`.
 
-1. Synthetic sanity test (known ground truth).
-2. Positive control pass/fail expectation (Kato).
-3. Negative control behavior (time-shuffled surrogate).
+This addresses the observed "web model found bug, codex missed it" dynamic.
 
-This should be mandatory before LLM-generated narrative text is allowed to mention the metric.
+### J. Process Changes Worth Adding To Repo
 
-### E. Separate "Exploration" and "Decision" Artifacts
-
-Keep two tracks:
-
-- `explore/*`: fast, LLM-heavy iterations.
-- `decision/*`: minimal, reviewed, reproducible artifacts only.
-
-Then only `decision/*` can feed `RESULTS.md` conclusions.
-
-This prevents accidental promotion of promising but unstable analyses.
-
-### F. Add a Structured "Evidence Ledger"
-
-Create one table (markdown or CSV) with columns:
-
-- `claim_id`
-- `status` (`supported`, `weak`, `refuted`, `open`)
-- `evidence_file`
-- `metric`
-- `control_passed`
-- `notes`
-
-This is the single best protection against LLM overconfident synthesis in science projects.
-
-### G. Prompt Templates for Scientific Rigor
-
-Use fixed prompt headers for LLM tasks:
-
-- "List assumptions first."
-- "List 3 ways this could be wrong."
-- "State what control would falsify your proposal."
-- "Do not interpret before reporting raw effect directions."
-
-This improves non-coding LLM outputs (methods, interpretation, writing), not just code generation.
-
-### H. Repo-Level Process Changes Worth Adding
-
-High value files to add:
-
+- `docs/QUESTION_GATE.md`
+- `docs/DATASET_GATE.md`
+- `docs/METRIC_VALIDATION.md`
 - `docs/CLAIMS_LEDGER.md`
-- `docs/METRIC_REGISTRY.md`
-- `docs/ANALYSIS_DECISION_LOG.md`
-- `templates/LLM_TASK_CONTRACT.md`
+- `templates/WEEKLY_EXPERT_CHECK.md`
 
-These are lightweight and directly aligned with how this repo is already operating.
+## 2) Science Suggestions To Move This Project Forward
 
-## 2) Science Suggestions to Move the Project Forward
+### A. Reframe The Core Scientific Program
 
-### Priority 1: Re-anchor Stationarity to a Passing Positive Control
+Current high-level hypothesis is ambitious and multi-layered (`genes -> local rules -> scaffold -> behavior`).
 
-Do not treat the current split-half criterion as the main gate yet.
+With current data, prioritize claims that are identifiable now:
 
-Recommendation:
+1. Is scaffold geometry stable within behavior modes?
+2. Are failures mostly mode-mixing or true drift?
+3. Does scaffold state add predictive value for behavior transitions?
 
-- Define at least one stationarity criterion that Kato passes reliably.
-- Then apply the same criterion to Atanas.
+Only then climb toward stronger mechanistic claims.
 
-Candidate criteria:
+### B. Replace Global Split-Half As Primary Stationarity Test
 
-- Windowed stationarity (short rolling windows instead of full half split).
-- Behavior-matched split (same behavior composition pre and post).
-- Trial-like pseudo-epochs in continuous data (event-aligned segments).
+Global split-half is a stress test, not the main scientific criterion.
 
-This is the most important next scientific step.
+Use three stationarity views:
 
-### Priority 2: Explicitly Model Behavioral Mode Mixture in Atanas
+- `windowed contiguous stationarity`
+- `behavior-matched stationarity`
+- `event-aligned pseudo-trial stationarity`
 
-Given Atanas includes behavior time series and known state-dependent remapping in the paper:
+Require Kato pass on at least one before applying identical criterion to Atanas.
 
-- Segment by behavior state first (forward, reversal, turning, pumping regime, etc.).
-- Fit per-mode scaffold(s).
-- Evaluate within-mode and cross-mode transfer separately.
+### C. Decompose Geometry Versus Occupancy
 
-Interpretation target:
+For Atanas and heat:
 
-- Distinguish true scaffold drift from mode-mixing failure.
+- test geometry invariance (shape/topology),
+- separately test occupancy and phase-velocity changes.
 
-Right now those are confounded.
+Many apparent scaffold changes are likely occupancy/mixture shifts, not geometry collapse.
 
-### Priority 3: Use Heat Data as a Controlled Perturbation of State
+### D. Use Atanas Metadata More Aggressively
 
-Heat is currently on hold, but it is likely the strongest testbed for your core question.
+You have behavior series and encoding-change information.
 
-Run pre-registered tests:
+Use them to:
 
-- Geometry stability: does scaffold topology stay similar pre/post heat?
-- Occupancy dynamics: do alpha/theta occupancies and transition probabilities shift?
-- Recovery dynamics: does model return to baseline scaffold or move to alternate scaffold?
+- stratify runs by behavioral regime,
+- relate scaffold instability to behavioral composition and remapping indices,
+- test whether instability clusters in specific state-change periods.
 
-This connects directly to intrinsic vs feedback-stabilized dynamics framing.
+### E. Make Heat-Pulse Analysis A State-Perturbation Study
 
-### Priority 4: Compare Multiple Generative Families, Not Only LOOPER
+Do not ask "does it return to one global scaffold?" first.
 
-For this question, include at least one comparator that supports regime switching:
+Ask:
 
-- switching LDS / HMM with explicit state transitions,
-- mode-conditioned LOOPER,
-- simple behavior-conditioned baseline.
+- does heat induce temporary regime switch?
+- does pre-heat model predict post-heat within matched behavior mode?
+- does system return to prior mode occupancy profile over time?
 
-Decision criterion should include:
+This is better aligned with the Atanas paper’s state-dependent remapping results.
 
-- predictive power on held-out windows,
-- interpretability of branch/merge structure,
-- robustness to split policy.
+### F. Add One Comparator Family Beyond LOOPER
 
-### Priority 5: Move From Aggregate Medians to Per-Worm Effect Taxonomy
+Use one explicit switching model baseline:
 
-Your summary medians are useful, but scientifically you likely have subtypes.
+- switching LDS or HMM.
 
-Classify worms by:
+Compare against LOOPER on:
 
-- stable scaffold,
-- multi-scaffold switching,
-- strong drift,
-- low-signal/noisy.
+- held-out predictive performance,
+- robustness to split policy,
+- interpretability of regime switches.
 
-Then ask what predicts class membership:
+This tests whether LOOPER-specific assumptions are driving conclusions.
 
-- neuron count,
-- behavioral composition,
-- encoding-change indices from Atanas metadata,
-- recording quality proxies.
+### G. Upgrade From Median Summaries To Worm-Level Taxonomy
 
-### Priority 6: Test the "Computational Scaffold" Claim Directly
+Classify each worm into:
 
-For each fitted scaffold, test whether branch/merge structure predicts behavior decisions:
+- stable-within-mode,
+- mode-switch dominated,
+- drift dominated,
+- low-signal/ambiguous.
 
-- Can scaffold state predict upcoming reversal/turn better than matched low-dim PCA baselines?
-- Are branch points aligned with behavior transitions above chance under shuffles?
-- Are errors structured (specific confusions), not just noisy?
+Then ask what predicts class membership.
 
-This moves from geometry description to computation claim.
+This is more scientifically informative than aggregate medians alone.
 
-### Priority 7: Cross-Worm Neuron-Identity Anchoring in Atanas
+### H. Define Explicit Falsifiers For Near-Term Claims
 
-You have NeuroPAL labels in many recordings. Use them.
+Example:
 
-- Build shared-neuron analyses analogous to Kato shared run.
-- Quantify whether scaffold events map to consistent neuron-class motifs.
-- Track which neuron classes are most involved in remapping periods.
+- If behavior-conditioned stationarity still fails on Kato and Atanas, then "mode-mixing explains instability" is weakened.
+- If scaffold state does not improve transition prediction over simple baselines, "computational scaffold usefulness" is weakened.
 
-This will greatly strengthen biological interpretation.
-
-## Suggested 4-Week Execution Plan
+## 8-Week Practical Plan
 
 Week 1:
 
-- Finalize stationarity metric registry and positive-control pass criteria.
-- Implement 2 alternate stationarity metrics.
+- Implement question gate, dataset gate, metric validation docs.
+- Register 2-3 near-term claims in claims ledger.
 
 Week 2:
 
-- Run behavior-conditioned baseline Atanas analyses.
-- Produce within-mode vs cross-mode generalization tables.
+- Implement behavior-conditioned and windowed stationarity.
+- Re-run Kato and Atanas baseline with provenance tags.
 
 Week 3:
 
-- Run pre/post heat scaffold shift analysis with pre-registered metrics.
-- Add surrogate controls for each metric.
+- Add geometry-vs-occupancy decomposition analyses.
+- Produce worm-level taxonomy table.
 
 Week 4:
 
-- Consolidate evidence ledger.
-- Update `RESULTS.md` with claim-status labels (`supported`, `weak`, `open`).
+- Add switching-model comparator baseline.
+- Run matched evaluations.
 
-## Final Note
+Week 5:
 
-The repo is already in a good scientific posture: you did not overclaim from in-sample fits, and you used a strong control. The next leap is to tighten metric governance and explicitly model state/mode structure, which is strongly supported by both the Atanas and Kato papers you are building on.
+- Heat-pulse state-perturbation analyses using mode-matched evaluation.
+
+Week 6:
+
+- Cross-worm neuron-identity anchored analyses where labels permit.
+
+Week 7:
+
+- Consolidate claim status and falsifier outcomes.
+
+Week 8:
+
+- Write updated `RESULTS.md` around claim statuses, not around one global narrative.
+
+## Closing
+
+The logs show strong execution capability and strong self-correction. The next leap is to harden the epistemic control system so that LLM speed compounds scientific clarity instead of outrunning it.
