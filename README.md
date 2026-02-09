@@ -16,7 +16,7 @@ We use the Kato 2015 immobilized data as a positive control and apply the same p
 
 4. **Next steps:** A null model baseline would calibrate the fidelity results, and a stationarity criterion that the positive control passes would enable meaningful comparison of temporal stability between datasets.
 
-See `RESULTS.md` for the full analysis with per-worm data tables and diagnostic figure descriptions.
+See [RESULTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RESULTS.md) for the full analysis with per-worm data tables and diagnostic figure descriptions.
 
 ---
 
@@ -26,10 +26,10 @@ Read in this order:
 
 | Document | What it covers |
 |----------|---------------|
-| **`RESULTS.md`** | What we found — per-worm tables, cross-dataset comparisons, interpretation |
-| **`EXPERIMENTS.md`** | Why we ran these tests — scientific question, experimental design, decision logic |
-| **`METHODS.md`** | How we computed everything — pipeline, parameters, metrics, diagnostic plots |
-| **`RUNBOOK.md`** | How to reproduce — prerequisites, running scripts, output structure, troubleshooting |
+| **[RESULTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RESULTS.md)** | What we found — per-worm tables, cross-dataset comparisons, interpretation |
+| **[EXPERIMENTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/EXPERIMENTS.md)** | Why we ran these tests — scientific question, experimental design, decision logic |
+| **[METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md)** | How we computed everything — pipeline, parameters, metrics, diagnostic plots |
+| **[RUNBOOK.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RUNBOOK.md)** | How to reproduce — prerequisites, running scripts, output structure, troubleshooting |
 
 ---
 
@@ -97,7 +97,7 @@ LOOPER-freely-moving-worms/
 
 **Atanas 2023** (target): 21 freely moving worms (baseline, no stimulus), ~109-153 NeuroPAL-identified neurons each, ~16 min recordings at ~1.7 Hz. Data files: `atanas-data/baseline/*.json`. Source: Atanas et al. 2023, *Cell*.
 
-See `atanas-data/DATASET.md` and `kato_2015/DATASET.md` for full details on each dataset.
+See [atanas-data/DATASET.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/atanas-data/DATASET.md) and [kato_2015/DATASET.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/kato_2015/DATASET.md) for full details on each dataset.
 
 ---
 
@@ -131,7 +131,7 @@ kato_all_stationarity
 atanas_all_stationarity
 ```
 
-See `RUNBOOK.md` for expected outputs, caching details, and troubleshooting.
+See [RUNBOOK.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RUNBOOK.md) for expected outputs, caching details, and troubleshooting.
 
 ---
 

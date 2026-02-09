@@ -2,7 +2,7 @@
 
 How to run the experiments in this repo and what to expect.
 
-For what these experiments test and why, see `EXPERIMENTS.md`. For pipeline and metric details, see `METHODS.md`.
+For what these experiments test and why, see [EXPERIMENTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/EXPERIMENTS.md). For pipeline and metric details, see [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md).
 
 ---
 
@@ -82,7 +82,7 @@ Per-worm LOOPER output containing the `saveData` struct (scaffold, emission mode
 
 ### 2. Summary CSV
 
-One row per worm with all evaluation metrics. See `METHODS.md` Section 5 for column definitions.
+One row per worm with all evaluation metrics. See [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md) Section 5 for column definitions.
 
 - `results/<dataset>_<scope>/<mode>/summary.csv`
 
@@ -94,7 +94,7 @@ PNG files showing loop structure, reconstruction quality, phase continuity, and 
 - Stationarity recovery plots: `results/<dataset>_<scope>/<mode>/plots/*.png`
 - PCA stream plots: `results/<dataset>_<scope>/<mode>/*_final_stream_pca.png`
 
-See `METHODS.md` Section 8 for what each plot type shows.
+See [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md) Section 8 for what each plot type shows.
 
 ---
 

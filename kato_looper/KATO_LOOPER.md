@@ -145,4 +145,4 @@ use **per‑neuron detrending across time** because the OSF‑style detrend redu
 reconstruction quality (R² ~0.64 → ~0.49). We will revisit once the authors
 clarify the intended preprocessing.
 
-(See `METHODS.md` and `LOOPER_OSF_hosted_2022/LOOPER_PAPER_SCRIPTS.md`.)
+(See [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md) and [LOOPER_OSF_hosted_2022/LOOPER_PAPER_SCRIPTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/LOOPER_OSF_hosted_2022/LOOPER_PAPER_SCRIPTS.md).)

@@ -56,7 +56,7 @@ Do not let `Builder` choose the scientific question.
 
 ### D. Enforce A Metric Validation Ladder
 
-A metric can enter `RESULTS.md` only after passing:
+A metric can enter [RESULTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RESULTS.md) only after passing:
 
 1. synthetic sanity check,
 2. positive-control expectation check,
@@ -252,7 +252,7 @@ Week 7:
 
 Week 8:
 
-- Write updated `RESULTS.md` around claim statuses, not around one global narrative.
+- Write updated [RESULTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RESULTS.md) around claim statuses, not around one global narrative.
 
 ## Closing
 

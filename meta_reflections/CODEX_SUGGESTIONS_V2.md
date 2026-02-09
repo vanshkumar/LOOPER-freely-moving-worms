@@ -71,7 +71,7 @@ Interpretation:
 ### 5) You treat documentation as part of scientific control, not post-hoc polish
 
 Representative turns:
-- `2025-12-13T14:42:29Z`: asks for a caveat-aware `METHODS.md`.
+- `2025-12-13T14:42:29Z`: asks for a caveat-aware [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md).
 - `2025-12-13T19:11:19Z`: asks for exact coding-agent instructions.
 - `2026-01-30` doc consistency passes across `LOOPER-freely-moving-worms`.
 
@@ -150,11 +150,11 @@ This prevents losing signal from branches that do not confirm the initial story.
 
 ### 6) Keep metric governance strict
 
-A metric enters `RESULTS.md` only if all pass:
+A metric enters [RESULTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RESULTS.md) only if all pass:
 - synthetic sanity,
 - positive control,
 - null/surrogate,
-- plain-language definition in `METHODS.md`.
+- plain-language definition in [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md).
 
 ### 7) Keep dataset identifiability explicit
 

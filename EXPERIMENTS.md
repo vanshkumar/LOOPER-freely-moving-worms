@@ -2,7 +2,7 @@
 
 This document describes the experimental design used in this repo: what we're testing, why, and how the experiments relate to each other.
 
-For implementation details and metric definitions, see `METHODS.md`. For how to run the scripts, see `RUNBOOK.md`. For results, see `RESULTS.md`.
+For implementation details and metric definitions, see [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md). For how to run the scripts, see [RUNBOOK.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RUNBOOK.md). For results, see [RESULTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RESULTS.md).
 
 **Source of truth:** the MATLAB scripts are authoritative. If this document diverges from the code, trust the scripts.
 
@@ -97,9 +97,9 @@ Failure on this test is informative (there is temporal non-stationarity at this 
 
 ### Current status and conclusions
 
-**Fidelity:** Both datasets pass. LOOPER finds comparable in-sample loop structure in freely moving and immobilized worms. See `RESULTS.md` Sections 3-4.
+**Fidelity:** Both datasets pass. LOOPER finds comparable in-sample loop structure in freely moving and immobilized worms. See [RESULTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RESULTS.md) Sections 3-4.
 
-**Stationarity:** Both datasets fail, including the positive control. The scaffold does not generalize from the first half to the second half in either case. Because the positive control also fails, we cannot use this test to draw conclusions specific to freely moving worms. See `RESULTS.md` Sections 5-7.
+**Stationarity:** Both datasets fail, including the positive control. The scaffold does not generalize from the first half to the second half in either case. Because the positive control also fails, we cannot use this test to draw conclusions specific to freely moving worms. See [RESULTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RESULTS.md) Sections 5-7.
 
 **Implication:** The next step is to find a stationarity criterion that the Kato positive control reliably passes (e.g., trial-style validation, windowed stationarity, or behavior-conditioned scaffolds), then apply that same criterion to the Atanas data.
 

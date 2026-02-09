@@ -2,7 +2,7 @@
 
 **Last updated:** 2026-02-09
 
-For background on the scientific question and experimental design, see `EXPERIMENTS.md`. For pipeline details and metric definitions, see `METHODS.md`. For how to reproduce these results, see `RUNBOOK.md`.
+For background on the scientific question and experimental design, see [EXPERIMENTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/EXPERIMENTS.md). For pipeline details and metric definitions, see [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md). For how to reproduce these results, see [RUNBOOK.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RUNBOOK.md).
 
 ---
 
@@ -57,15 +57,15 @@ Worm identifiers follow the date-based NeuroPAL convention (e.g., `2022-06-14-01
 
 ## 2. Methods summary
 
-The same pipeline is applied to both datasets: preprocess (detrend for Kato, skip for Atanas) → delay-embed → run LOOPER → evaluate. Full details in `METHODS.md`.
+The same pipeline is applied to both datasets: preprocess (detrend for Kato, skip for Atanas) → delay-embed → run LOOPER → evaluate. Full details in [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md).
 
 **Two tests per worm:**
 - **Fidelity:** Train on the full trace, evaluate on the same trace (in-sample).
 - **Stationarity:** Train on the first half, project the full trace, evaluate reconstruction and drift in the held-out second half.
 
-**Key metrics:** `recon_corr_full` (in-sample reconstruction, Pearson r), `recon_corr_post` (held-out reconstruction), `phase_var` (phase smoothness), `unique_loops` / `loop_switches` (loop structure), `mean_post` / `post_slope` / `d_peak` (stationarity drift). See `METHODS.md` Section 5 for full definitions.
+**Key metrics:** `recon_corr_full` (in-sample reconstruction, Pearson r), `recon_corr_post` (held-out reconstruction), `phase_var` (phase smoothness), `unique_loops` / `loop_switches` (loop structure), `mean_post` / `post_slope` / `d_peak` (stationarity drift). See [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md) Section 5 for full definitions.
 
-**Dataset-specific parameters:** Kato uses the paper's defaults (DelayTime=10, DelayCount=10, z-score enabled). Atanas uses autocorrelation-scaled parameters (DelayTime=4, DelayCount=5, z-score disabled because already normalized). See `METHODS.md` Section 6 for the full parameter table.
+**Dataset-specific parameters:** Kato uses the paper's defaults (DelayTime=10, DelayCount=10, z-score enabled). Atanas uses autocorrelation-scaled parameters (DelayTime=4, DelayCount=5, z-score disabled because already normalized). See [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md) Section 6 for the full parameter table.
 
 ---
 
@@ -291,4 +291,4 @@ Both datasets fail the split-half stationarity test. The absolute distance value
 
 ---
 
-For diagnostic figure descriptions, see `METHODS.md` Section 8. For the complete file index and scripts-to-outputs mapping, see `RUNBOOK.md`.
+For diagnostic figure descriptions, see [METHODS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/METHODS.md) Section 8. For the complete file index and scripts-to-outputs mapping, see [RUNBOOK.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RUNBOOK.md).

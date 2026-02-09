@@ -2,7 +2,7 @@
 
 This document describes the processing pipeline, evaluation protocol, metric definitions, and dataset-specific parameter choices used in this repo.
 
-For the experimental design and rationale, see `EXPERIMENTS.md`. For how to run the scripts, see `RUNBOOK.md`. For results, see `RESULTS.md`.
+For the experimental design and rationale, see [EXPERIMENTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/EXPERIMENTS.md). For how to run the scripts, see [RUNBOOK.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RUNBOOK.md). For results, see [RESULTS.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RESULTS.md).
 
 **Source of truth:** the MATLAB scripts are authoritative. If anything here diverges from the code, trust the scripts.
 
@@ -96,7 +96,7 @@ LOOPER is run via `LOOPER.m`, a headless wrapper around the original GUI applica
 4. Raise the matrix to successive powers until `RepopulateDensity` (= 0.95) connectivity is achieved. This smooths the transition structure.
 5. Exclude self-transitions within `MinimumReturnTime` frames (prevents trivially short loops).
 
-The diffusion map is the most expensive step and is cached to `results/<run>/cache/` for re-use. If you change preprocessing or parameters, clear the cache to avoid stale results (see `RUNBOOK.md`).
+The diffusion map is the most expensive step and is cached to `results/<run>/cache/` for re-use. If you change preprocessing or parameters, clear the cache to avoid stale results (see [RUNBOOK.md](https://github.com/vanshkumar/LOOPER-freely-moving-worms/blob/main/RUNBOOK.md)).
 
 ### 3b. State reduction
 
